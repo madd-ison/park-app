@@ -1,0 +1,20 @@
+.container {
+  padding-top: 20px;
+}
+
+.center {
+  text-align: center;
+  color: #228b22;
+}
+
+#results-list {
+  color: #8b4513;
+}
+
+a {
+  color: #228b22;
+}
+
+a:visited {
+  color: #808080;
+}
