@@ -45,6 +45,10 @@ console.log(url);
 function displayDom(responseJson, stateCode, limit) {
   console.log(responseJson);
   $('#results-list').empty();
+  $('#js-error-message').empty();
+  if (responseJson.total == 0) {
+    $('#js-error-message').text(`No parks found, please try again.`);
+  }
   for (let i = 0; i < responseJson.data.length; i++) {
     $('#results-list').append(
       `<p><b>${responseJson.data[i].fullName}</b> <br> ${responseJson.data[i].description} <br> 
