@@ -8,16 +8,39 @@ const searchUrl = 'https://developer.nps.gov/api/v1/parks'
 
 $(document).ready(function() {
   console.log("Waiting for user input!");
-  processInput();
 })
 
-function getParks(stateCode, limit=10) {
- fetch(searchUrl + '?stateCode=' + stateCode + '&limit=' + limit + "&api_key=" + apiKey)
-   .then(response => response.json())
-   .then(responseJson => {
-    displayDom(responseJson);
-  }).catch(error => alert("Sorry, something went wrong"))
+function formatQueryParams(params) {
+  const queryItems = Object.keys(params)
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+  return queryItems.join('&');
 }
+
+
+function getParks(stateCode, limit=10) {
+  const params = {
+    stateCode: $('#js-search-term').val(),
+    limit: $('#js-max-results').val(),
+    api_key: apiKey
+  };
+  const queryString = formatQueryParams(params)
+  const url = searchUrl + '?' + queryString;
+
+console.log(url);
+
+  fetch(url)
+      .then(response => {
+       if (response.ok) {
+        return response.json();
+      }
+      throw new Error(response.statusText);
+    })
+    .then(responseJson => displayDom(responseJson))
+    .catch(err => {
+      $('#js-error-message').text(`Something went wrong: ${err.message}`);
+    });
+}
+
 
 function displayDom(responseJson, stateCode, limit) {
   console.log(responseJson);
@@ -25,8 +48,8 @@ function displayDom(responseJson, stateCode, limit) {
   for (let i = 0; i < responseJson.data.length; i++) {
     $('#results-list').append(
       `<p><b>${responseJson.data[i].fullName}</b> <br> ${responseJson.data[i].description} <br> 
-      <a href="${responseJson.data[i].url}">Visit Website</a></p>`
-  )};
+        <a href="${responseJson.data[i].url}" target="_blank">Visit Website</a></p>`
+  )}
 }
 
 function processInput(){
@@ -37,3 +60,5 @@ function processInput(){
     getParks(stateCode, limit);
   });
 }
+
+$(processInput);
