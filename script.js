@@ -60,6 +60,9 @@ function processInput(){
    $('form').submit(event => {
     event.preventDefault();
     const stateCode = $('#js-search-term').val();
+    if (stateCode.length < 2) {
+    return $('#js-error-message').text(`Please enter a full state code.`);
+}
     const limit = $('#js-max-results').val();
     getParks(stateCode, limit);
   });
